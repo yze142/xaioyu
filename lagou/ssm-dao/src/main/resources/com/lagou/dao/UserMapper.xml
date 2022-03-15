@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lagou.dao.UserMapper">
+
+    <!--多条件查询-->
+    <select id="findAllUser" resultType="com.lagou.domain.User">
+        SELECT * FROM USER
+<where>
+<if test="true">
+and is_del != 1</if>
+<if test="username != null">
+and name = #{username}</if>
+<if test="startCreateTime != null and endCreateTime != null">
+and create_time BETWEEN #{startCreateTime} AND #{endCreateTime}
+</if>
+</where>
+
+
+    </select>
+
+    <!--用户登录的方法-->
+    <select id="UserLogin" resultType="com.lagou.domain.User" parameterType="com.lagou.domain.User">
+select * from user where phone= #{phone}
+
+    </select>
+
+    <!--添加用户的方法-->
+<insert id="addUser" parameterType="com.lagou.domain.User">
+
+insert  into user (id,name,phone,password)   value(#{id},#{name},#{phone},#{password})
+
+</insert>
+ <!--   // 用户昵称
+    private String name;
+    // 用户头像地址
+    private String portrait;
+    // 注册手机
+    private String phone;
+    // 用户密码（可以为空，支持只用验证码注册、登录）
+    private String password;
+    // 注册ip
+    private String reg_ip;
+    // 是否有效用户
+    private Integer account_non_expired;
+    // 账号是否未过期
+    private Integer credentials_non_expired;
+    // 是否未锁定
+    private Integer account_non_locked;
+    // 用户状态
+    private String status;
+    // 是否删除
+    private Integer is_del;
+    // 创建时间
+    private Date create_time;
+    // 更新时间
+    private Date update_time;-->
+    <!--根据用户id查询用户对应的角色-->
+    <select id="findUserRelationRoleById" parameterType="int" resultType="com.lagou.domain.Role">
+  select * from roles re inner join User_Role_relation urn on re.id=urn.role_id where urn.user_id=#{id}
+
+    </select>
+
+  <!--根据角色id来清空对应关系-->
+    <delete id="deleteUserContextRole" parameterType="int">
+        delete from user_role_relation where user_id = #{userid}
+
+
+    </delete>
+
+    <!--用户角色关联-->
+  <insert id="userContextRole" parameterType="com.lagou.domain.User_Role_relation">
+
+      insert into user_role_relation values(null,#{userId},#{roleId},#{createdTime},#{updatedTime},#{createdBy},#{updatedby})
+
+  </insert>
+  <!--  &lt;!&ndash;根据userid清空中间表关联关系     public void deleteUserContextRole(Integer userId);&ndash;&gt;
+    <delete id="deleteUserContextRole" parameterType="int" >
+        delete from user_role_relation where user_id = #{userid}
+    </delete>
+
+    &lt;!&ndash;分配角色 userContextRole&ndash;&gt;
+    <insert id="userContextRole" parameterType="com.lagou.domain.User_Role_relation">
+        insert into user_role_relation values(null,#{userId},#{roleId},#{createdTime},#{updatedTime},#{createdBy},#{updatedby})
+    </insert>-->
+
+
+    <!--2.根据角色id查询父菜单 因为角色表和菜单表示多对多的关系，所以要三表联查 GROUP BY m.id-->
+    <select id="findParentMenuByRoleId" parameterType="java.util.List" resultType="com.lagou.domain.Menu">
+     <!--   select distinct e.* from  menu e inner join role_menu_relation rm on e.id=rm.menu_id
+               inner join roles r on r.id=rm.role_id
+        where m.parent_id=-1 and r.id in
+             <foreach collection="list" item="item" open="(" separator=","  close=")">
+                    #{item}
+               </foreach>
+-->
+        SELECT
+        DISTINCT m.*
+        FROM
+        roles r INNER JOIN role_menu_relation rm ON r.id = rm.role_id
+        INNER JOIN menu m ON m.id =rm.menu_id
+        WHERE
+        m.parent_id = -1 AND r.id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+<!--3.根据父菜单关联的子菜单进行查询,因为子菜单parent对应的父菜单就是parent为-1的id,这就是内查询-->
+  <select id="findSubMenuByPid" resultType="com.lagou.domain.Menu" parameterType="int">
+         select * from menu where  parent_id=#{pid}
+  </select>
+
+
+    <!--4.获取资源信息,角色和资源表又是一个多对多的关系，所以又要三表联查了，真的服了-->
+  <select id="findResourceByRoleId" parameterType="java.util.List" resultType="com.lagou.domain.Resource">
+      select distinct c.*  from resource c inner join role_resource_relation rr on c.id=rr.resource_id
+     inner join roles r on r.id=rr.role_id
+         where r.id in 
+         <foreach collection="list" item="item" open="(" separator="," close=")">
+              #{item}
+         </foreach>
+
+
+  </select>
+
+
+
+</mapper>
