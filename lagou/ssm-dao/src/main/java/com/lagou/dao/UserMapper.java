@@ -38,7 +38,7 @@ public interface UserMapper {
     //4.根据角色id获取资源信息
    public List<Resource>   findResourceByRoleId(List<Integer> ids);
     
-     public List<Resource>   afindResourceByRoleId(List<Integer> ids);
+    /* public List<Resource>   afindResourceByRoleId();*/
 
 
 }
