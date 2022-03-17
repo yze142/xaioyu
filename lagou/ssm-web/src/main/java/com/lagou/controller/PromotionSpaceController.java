@@ -52,7 +52,7 @@ public class PromotionSpaceController {
     }
 
 
-    //修改广告位得时候回显一下数据
+    //修改广告位得时候回显一下数据findPromotionSpaceById
     @RequestMapping("/findPromotionSpaceById")
     public ResponseResult findPromotionSpaceById(Integer id){
         PromotionSpace allPromotionAdByPage = promotionSpaceService.findPromotionSpaceById(id);

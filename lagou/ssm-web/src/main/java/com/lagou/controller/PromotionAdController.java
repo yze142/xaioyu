@@ -26,7 +26,7 @@ public class PromotionAdController {
     private PromotionAdService promotionAdService;
 
     /*查询所有广告条*/
-    @RequestMapping("/findAllPromotionAdByPage")
+    @RequestMapping("/findAllPromotionAd")
     public ResponseResult findAllPromotionAdByPage( PromotionAdVO promotionAdVO){
         //调用方法执行查询
         PageInfo allPromotionAdByPage = promotionAdService.findAllPromotionAdByPage(promotionAdVO);

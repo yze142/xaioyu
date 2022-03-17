@@ -17,6 +17,15 @@ public class UserServiceImol implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+   /*修改用户状态*/
+    @Override
+    public void updateUserStatus(Integer id, String status) {
+         User user=new User();
+         user.setId(id);
+         user.setStatus(status);
+
+        userMapper.updateUserStatus(user);
+    }
 
     //分页多条件查询用户
     @Override

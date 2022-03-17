@@ -9,6 +9,10 @@ import com.lagou.domain.UserVo;
 import java.util.List;
 
 public interface UserService {
+
+    /*修改用户状态*/
+    public  void updateUserStatus(Integer id, String status);
+
     //分页多条件查询用户
     public PageInfo<User> findAllUser(UserVo userVo);
 

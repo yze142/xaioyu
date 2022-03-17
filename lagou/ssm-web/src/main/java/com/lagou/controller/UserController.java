@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,5 +135,16 @@ public class UserController {
 
     }
 
+    /*修改用户状态*/
+    @RequestMapping("/updateUserStatus")
+    public  ResponseResult updateUserStatus(Integer id,String status){
+        //调用方法
+         userService.updateUserStatus(id,status);
+
+        ResponseResult responseResult = new ResponseResult(true, 200, "修改成功", null);
+        return responseResult;
+
+
+    }
 
 }

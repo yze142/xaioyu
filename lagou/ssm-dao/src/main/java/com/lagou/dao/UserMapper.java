@@ -37,8 +37,7 @@ public interface UserMapper {
 
     //4.根据角色id获取资源信息
    public List<Resource>   findResourceByRoleId(List<Integer> ids);
-    
 
-
-
+  /*修改用户状态*/
+   public   void updateUserStatus(User user);
 }

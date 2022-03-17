@@ -28,7 +28,7 @@ public class CourseController {
    private CourseService courseService;
 
     //按条件查询课程的方法 这里的参数要用到一个RequesBody的注解用来注解这个参数
-    @RequestMapping("/findCourseByCondition")
+    @RequestMapping("/findAllCourse")
     public ResponseResult findCourseByCondition(@RequestBody CourseVO courseVO){
         //调用service
         List<Course> courseList = courseService.findCourseByCondition(courseVO);
